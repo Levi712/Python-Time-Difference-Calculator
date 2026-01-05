@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Python Date Range Calculator</title>
+
+<style>
+  body{font-family:Segoe UI,system-ui;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;margin:0}
+  .card{background:#fff;border-radius:16px;padding:26px 30px;width:440px;
+  box-shadow:0 18px 38px rgba(0,0,0,.28)}
+  h2{text-align:center;margin:0 0 10px}
+  p{text-align:center;margin:0 0 16px;color:#666}
+  .field{margin:10px 0}
+  input{width:100%;padding:10px;border-radius:10px;border:1px solid #ccc;margin-top:6px}
+  button{width:100%;padding:11px;border-radius:12px;border:none;margin-top:12px;
+  background:#1b49a6;color:#fff;font-size:15px;cursor:pointer}
+  .results{margin-top:14px;background:#f5f6ff;border-radius:12px;padding:10px;border:1px dashed #b8c2ff}
+  .row{display:flex;justify-content:space-between;margin:4px 0}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h2>Python Date Range Calculator</h2>
+  <p>Enter dates as DD / MM / YYYY</p>
+
+  <div class="field">
+    <label>From</label>
+    <input id="from" placeholder="23/12/1995">
+  </div>
+
+  <div class="field">
+    <label>To</label>
+    <input id="to" placeholder="21/02/2000">
+  </div>
+
+  <button onclick="send()">Calculate</button>
+
+  <div id="out" class="results" style="display:none"></div>
+</div>
+
+<script>
+function send(){
+  const formData = new FormData();
+  formData.append("from", document.getElementById("from").value);
+  formData.append("to", document.getElementById("to").value);
+
+  fetch("/calculate", {method:"POST", body: formData})
+    .then(r => r.json())
+    .then(data => {
+      const out = document.getElementById("out");
+      out.style.display = "block";
+      out.innerHTML = `
+        <div class="row"><b>Years</b><span>${data.years}</span></div>
+        <div class="row"><b>Decades</b><span>${data.decades}</span></div>
+        <div class="row"><b>Months</b><span>${data.months}</span></div>
+        <div class="row"><b>Weeks</b><span>${data.weeks}</span></div>
+        <div class="row"><b>Days</b><span>${data.days}</span></div>
+        <div class="row"><b>Hours</b><span>${data.hours}</span></div>
+        <div class="row"><b>Minutes</b><span>${data.minutes}</span></div>
+        <div class="row"><b>Seconds</b><span>${data.seconds}</span></div>
+      `;
+    });
+}
+</script>
+</body>
+</html>
